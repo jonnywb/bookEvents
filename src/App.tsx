@@ -10,10 +10,11 @@ import {
   setupIonicReact,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { home, personOutline } from "ionicons/icons";
+import { home, personOutline, search } from "ionicons/icons";
 
 import Login from "./pages/Login";
 import Events from "./pages/Events";
+import Search from "./pages/Search";
 import Account from "./pages/Account";
 
 /* Core CSS required for Ionic components to work properly */
@@ -69,6 +70,7 @@ const App: React.FC = () => {
               <Redirect exact path="/" to="/events" />
 
               <Route path="/events" render={() => <Events />} exact={true} />
+              <Route path="/search" render={() => <Search />} exact={true} />
               <Route path="/account" render={() => <Account setLoggedIn={setLoggedIn} />} exact={true} />
             </IonRouterOutlet>
 
@@ -76,6 +78,10 @@ const App: React.FC = () => {
               <IonTabButton tab="events" href="/events">
                 <IonIcon icon={home} />
                 <IonLabel>Events</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="search" href="/search">
+                <IonIcon icon={search} />
+                <IonLabel>Search</IonLabel>
               </IonTabButton>
               <IonTabButton tab="account" href="/account">
                 <IonIcon icon={personOutline} />

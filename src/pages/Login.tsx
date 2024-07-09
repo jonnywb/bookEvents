@@ -50,7 +50,7 @@ const Login: React.FC<homeProps> = ({ setLoggedIn }) => {
                 <IonCardHeader>
                   {/* Logo to be added here */}
                   <IonCardTitle>Login</IonCardTitle>
-                  <IonCardSubtitle className="ion-margin-none">
+                  <IonCardSubtitle>
                     <p>Enter your Login Details</p>
                   </IonCardSubtitle>
                 </IonCardHeader>
@@ -82,7 +82,7 @@ const Login: React.FC<homeProps> = ({ setLoggedIn }) => {
                         Login
                       </IonButton>
 
-                      <IonButton disabled>
+                      <IonButton color="secondary">
                         <IonIcon slot="end" icon={createOutline} />
                         Register
                       </IonButton>

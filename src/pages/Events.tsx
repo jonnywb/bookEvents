@@ -1,4 +1,4 @@
-import { IonCard, IonContent, IonHeader, IonList, IonPage, IonTitle, IonToolbar } from "@ionic/react";
+import { IonContent, IonHeader, IonItem, IonList, IonPage, IonTitle, IonToolbar } from "@ionic/react";
 
 const Events: React.FC = () => {
   return (
@@ -8,18 +8,14 @@ const Events: React.FC = () => {
           <IonTitle>Events</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Events</IonTitle>
-          </IonToolbar>
-          <IonList>
-            <IonCard>Event 1</IonCard>
-            <IonCard>Event 2</IonCard>
-            <IonCard>Event 3</IonCard>
-            <IonCard>Event 4</IonCard>
-          </IonList>
-        </IonHeader>
+      <IonContent className="ion-padding">
+        <IonList>
+          {Array.from({ length: 10 }).map((_, i) => (
+            <IonItem key={i}>
+              <h2>Event {i}</h2>
+            </IonItem>
+          ))}
+        </IonList>
       </IonContent>
     </IonPage>
   );
