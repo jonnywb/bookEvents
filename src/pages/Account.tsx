@@ -1,11 +1,7 @@
 import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, useIonRouter } from "@ionic/react";
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 
-interface accountProps {
-  setLoggedIn: Dispatch<SetStateAction<boolean>>;
-}
-
-const Account: React.FC<accountProps> = ({ setLoggedIn }) => {
+const Account: React.FC = () => {
   const router = useIonRouter();
 
   return (
@@ -17,7 +13,7 @@ const Account: React.FC<accountProps> = ({ setLoggedIn }) => {
             className="ion-margin-end"
             slot="end"
             onClick={() => {
-              setLoggedIn(false);
+              // setLoggedIn(false);
               router.push("/", "root");
             }}
           >

@@ -1,0 +1,6 @@
+.back-button {
+  min-height: auto;
+  max-height: 30px;
+  --padding-top: 6%;
+  --box-shadow: none;
+}

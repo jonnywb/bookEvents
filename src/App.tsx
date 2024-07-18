@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { Redirect, Route } from "react-router-dom";
 import {
   IonApp,
@@ -10,12 +11,17 @@ import {
   setupIonicReact,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { home, personOutline, search } from "ionicons/icons";
+import { calendarSharp, listSharp, newspaperSharp, personSharp, searchSharp } from "ionicons/icons";
 
-import Login from "./pages/Login";
+import { UserContext } from "./context/UserContext";
+
+import Home from "./pages/Home";
 import Events from "./pages/Events";
+import Categories from "./pages/Categories";
 import Search from "./pages/Search";
+import MyEvents from "./pages/myEvents";
 import Account from "./pages/Account";
+import CreateEvent from "./pages/CreateEvent";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -46,18 +52,17 @@ import "@ionic/react/css/palettes/dark.system.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import { useState } from "react";
 
 setupIonicReact();
 
 const App: React.FC = () => {
-  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const { user } = useContext(UserContext) || {};
 
-  if (!loggedIn) {
+  if (!user) {
     return (
       <IonApp>
         <IonReactRouter>
-          <Route path="/" render={() => <Login setLoggedIn={setLoggedIn} />} exact={true} />
+          <Route path="/" render={() => <Home />} />
         </IonReactRouter>
       </IonApp>
     );
@@ -70,21 +75,33 @@ const App: React.FC = () => {
               <Redirect exact path="/" to="/events" />
 
               <Route path="/events" render={() => <Events />} exact={true} />
+              <Route path="/categories" render={() => <Categories />} exact={true} />
               <Route path="/search" render={() => <Search />} exact={true} />
-              <Route path="/account" render={() => <Account setLoggedIn={setLoggedIn} />} exact={true} />
+              <Route path="/myevents" render={() => <MyEvents />} exact={true} />
+              <Route path="/account" render={() => <Account />} exact={true} />
+
+              <Route path="/create-event" render={() => <CreateEvent />} exact={true} />
             </IonRouterOutlet>
 
             <IonTabBar slot="bottom">
               <IonTabButton tab="events" href="/events">
-                <IonIcon icon={home} />
+                <IonIcon icon={newspaperSharp} />
                 <IonLabel>Events</IonLabel>
               </IonTabButton>
+              <IonTabButton tab="categories" href="/categories">
+                <IonIcon icon={listSharp} />
+                <IonLabel>Categories</IonLabel>
+              </IonTabButton>
               <IonTabButton tab="search" href="/search">
-                <IonIcon icon={search} />
+                <IonIcon icon={searchSharp} />
                 <IonLabel>Search</IonLabel>
               </IonTabButton>
+              <IonTabButton tab="myEvents" href="/myevents">
+                <IonIcon icon={calendarSharp} />
+                <IonLabel>My Events</IonLabel>
+              </IonTabButton>
               <IonTabButton tab="account" href="/account">
-                <IonIcon icon={personOutline} />
+                <IonIcon icon={personSharp} />
                 <IonLabel>Account</IonLabel>
               </IonTabButton>
             </IonTabBar>
