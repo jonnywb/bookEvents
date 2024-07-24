@@ -7,7 +7,7 @@ import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyACGNlbIgk_6_P5UngLpNsEkoBoaQzmBkU",
+  apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
   authDomain: "bookevents-5bd5d.firebaseapp.com",
   projectId: "bookevents-5bd5d",
   storageBucket: "bookevents-5bd5d.appspot.com",
