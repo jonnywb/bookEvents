@@ -1,0 +1,31 @@
+.author {
+  --background: var(--ion-color-primary-lite);
+}
+
+.literary {
+  --background: var(--ion-color-secondary-lite);
+}
+
+.trivia {
+  --background: var(--ion-color-tertiary-lite);
+}
+
+.poetry {
+  --background: var(--ion-color-warning-lite);
+}
+
+.launch {
+  --background: var(--ion-color-danger-lite);
+}
+
+.workshop {
+  --background: var(--ion-color-quaternary-lite);
+}
+
+ion-card-subtitle {
+  --color: var(--ion-color-dark);
+}
+
+ion-card {
+  --color: var(--ion-color-dark-shade);
+}

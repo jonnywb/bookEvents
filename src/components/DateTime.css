@@ -1,0 +1,10 @@
+.flex-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+ion-datetime {
+  padding: var(--ion-padding);
+  padding: 0.2rem;
+}

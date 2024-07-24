@@ -7,7 +7,7 @@ import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBiz95grSPTivvd8V9gct1kXn7p3wnOSUs",
+  apiKey: "AIzaSyACGNlbIgk_6_P5UngLpNsEkoBoaQzmBkU",
   authDomain: "bookevents-5bd5d.firebaseapp.com",
   projectId: "bookevents-5bd5d",
   storageBucket: "bookevents-5bd5d.appspot.com",
