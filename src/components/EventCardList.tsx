@@ -64,8 +64,7 @@ const EventCardList: React.FC<EventsCardListProps> = ({ events, getEvents }) => 
                 onClick={() => {
                   router.push("/event/" + event.id);
                 }}
-                key={event.id}
-                className={cardClass(event.category) + " ion-padding ion-align-items-end"}
+                className={cardClass(event.category)}
               >
                 <IonCardHeader>
                   <IonGrid fixed>
@@ -85,16 +84,36 @@ const EventCardList: React.FC<EventsCardListProps> = ({ events, getEvents }) => 
                   </IonGrid>
                 </IonCardHeader>
                 <IonCardContent>
-                  <IonText>
-                    <p style={{ fontSize: "1.2em" }}>{event.date}</p>
-                  </IonText>
+                  <IonRow>
+                    <IonCol size="12">
+                      <IonText>
+                        <p style={{ fontSize: "1.2em" }}>{event.date}</p>
+                      </IonText>
+                    </IonCol>
+                  </IonRow>
                   <IonGrid fixed>
                     <IonRow className="ion-justify-content-center">
                       <IonCol size="5">
-                        <img src={event.bookDetails.image} alt={event.eventName} />
+                        {event.category === "Author Meet and Greet" || event.category === "Writing Workshop" ? (
+                          <img
+                            src={`https://covers.openlibrary.org/a/olid/${event.bookDetails.authorKey}-M.jpg`}
+                            alt={event.bookDetails.authors}
+                          />
+                        ) : (
+                          <img src={event.bookDetails.image} alt={event.eventName} />
+                        )}
                       </IonCol>
                       <IonCol>
-                        <IonText>{event.description}</IonText>
+                        <IonText>
+                          {event.description.length > 180 ? (
+                            <p>
+                              {event.description.substring(0, 180)}...{" "}
+                              <span style={{ color: "var(--ion-color-primary-shade)" }}>Read More</span>
+                            </p>
+                          ) : (
+                            event.description
+                          )}
+                        </IonText>
                       </IonCol>
                     </IonRow>
 

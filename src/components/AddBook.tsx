@@ -16,15 +16,42 @@ import React, { useState } from "react";
 interface AddBookProps {
   selectedBook: any;
   setSelectedBook: (book: any) => void;
+  selectedCategory: string | null;
 }
 
-const AddBook: React.FC<AddBookProps> = ({ selectedBook, setSelectedBook }) => {
+const AddBook: React.FC<AddBookProps> = ({ selectedBook, setSelectedBook, selectedCategory }) => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [showSearchReults, setShowSearchResults] = useState<boolean>(false);
 
   const handleSearch = async (e: any) => {
     e.preventDefault();
+
+    let query = searchQuery;
+
+    switch (selectedCategory) {
+      case "Author Meet and Greet":
+        query += " author";
+        break;
+      case "Poetry Reading":
+        query += " poetry";
+        break;
+      case "Writing Workshop":
+        query += " writing";
+        break;
+      case "Book Trivia Night":
+        query += " trivia";
+        break;
+      case "Literary Festival":
+        query += " literature";
+        break;
+      case "Book Launch":
+        query += " new release";
+        break;
+      default:
+        break;
+    }
+
     const apiKey = import.meta.env.VITE_GOOGLE_BOOKS_API_KEY;
     const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(searchQuery)}&key=${apiKey}`;
 
@@ -43,11 +70,81 @@ const AddBook: React.FC<AddBookProps> = ({ selectedBook, setSelectedBook }) => {
     }
   };
 
-  const handleBookSelect = (book: any) => {
-    setSelectedBook(book);
-    setSearchQuery(""); // Clear the search query
-    setSearchResults([]); // Clear the search results
-    setShowSearchResults(false);
+  const searchAuthorByName = async (authorName: string) => {
+    const query = encodeURIComponent(authorName);
+    const url = `https://openlibrary.org/search.json?author=${query}&limit=1`;
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+
+      if (data.docs[0].author_name && data.docs[0].author_key) {
+        const authorKey = data.docs[0].author_key[0];
+        const authorName = data.docs[0].author_name[0];
+
+        return {
+          authorKey,
+          name: authorName,
+        };
+      } else {
+        console.error("No authors found for the given name.");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching author info from Open Library:", error);
+      return null;
+    }
+  };
+
+  const fetchAuthorDetailsFromOpenLibrary = async (authorKey: string) => {
+    const url = `https://openlibrary.org/authors/${authorKey}.json`;
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+
+      const name = data.name || "Unknown";
+      const biography = data.bio || "Biography not available.";
+
+      return {
+        name,
+        biography,
+      };
+    } catch (error) {
+      console.error("Error fetching author details from Open Library:", error);
+      return null;
+    }
+  };
+
+  const handleBookSelect = async (book: any) => {
+    const authorName = book.volumeInfo.authors[0];
+
+    const data = await searchAuthorByName(authorName);
+
+    if (data) {
+      const getAuthor = await fetchAuthorDetailsFromOpenLibrary(data.authorKey);
+
+      const authorDetails = {
+        ...getAuthor,
+        authorKey: data.authorKey,
+      };
+
+      const enhancedBook = {
+        ...book,
+        authorDetails,
+      };
+
+      setSelectedBook(enhancedBook);
+      setSearchQuery("");
+      setSearchResults([]);
+      setShowSearchResults(false);
+    }
   };
 
   const handleBookClear = () => {

@@ -32,7 +32,6 @@ import { getFirestore, addDoc, collection } from "firebase/firestore";
 import FB from "../config/FirebaseConfig";
 import { UserContext } from "../context/UserContext";
 import DateTime from "../components/DateTime";
-import { starSharp } from "ionicons/icons";
 
 const AddEvent: React.FC = () => {
   const db = getFirestore(FB);
@@ -67,7 +66,9 @@ const AddEvent: React.FC = () => {
   };
 
   const handleCategoryChange = (event: CustomEvent) => {
-    setSelectedCategory(event.detail.value);
+    const value = event.detail.value;
+
+    setSelectedCategory(value);
   };
 
   const handleLocationChange = (lat: number, long: number) => {
@@ -104,13 +105,14 @@ const AddEvent: React.FC = () => {
       !longitude ||
       !selectedDate ||
       !selectedTime ||
-      !user
+      !user ||
+      !selectedBook
     ) {
       console.error("Please fill in all the fields, and make sure you are logged in.");
       return;
     }
 
-    const eventData = {
+    const eventData: any = {
       eventName,
       description,
       featured,
@@ -118,19 +120,22 @@ const AddEvent: React.FC = () => {
       location: { lat: latitude, long: longitude },
       date: selectedDate,
       time: selectedTime,
-      bookDetails: selectedBook
-        ? {
-            title: selectedBook.volumeInfo.title,
-            authors: selectedBook.volumeInfo.authors,
-            description: selectedBook.volumeInfo.description,
-            image: selectedBook.volumeInfo.imageLinks?.thumbnail,
-          }
-        : null,
       createdAt: new Date().toISOString(),
       staffUsername: user.displayName,
       payAsYouFeel,
       price: payAsYouFeel ? null : price,
     };
+
+    eventData.bookDetails = selectedBook
+      ? {
+          authors: selectedBook.volumeInfo.authors,
+          description: selectedBook.volumeInfo.description,
+          image: selectedBook.volumeInfo.imageLinks?.thumbnail,
+          biography: selectedBook.authorDetails?.biography,
+          authorKey: selectedBook.authorDetails?.authorKey,
+          title: selectedBook.volumeInfo.title,
+        }
+      : null;
 
     try {
       const docRef = await addDoc(collection(db, "events"), eventData);
@@ -247,7 +252,11 @@ const AddEvent: React.FC = () => {
                         <DateTime handleTimeChange={handleTimeChange} />
                       </IonCol>
                       <IonCol size="12" sizeSm="8" sizeMd="6">
-                        <AddBook selectedBook={selectedBook} setSelectedBook={setSelectedBook} />
+                        <AddBook
+                          selectedBook={selectedBook}
+                          setSelectedBook={setSelectedBook}
+                          selectedCategory={selectedCategory}
+                        />
                       </IonCol>
                     </IonRow>
                     <IonButton type="submit" expand="block" className="ion-margin-top">

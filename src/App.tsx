@@ -17,7 +17,7 @@ import { UserContext } from "./context/UserContext";
 
 import Home from "./pages/Home";
 import Featured from "./pages/Featured";
-import Search from "./pages/Search";
+import Search from "./pages/FindEvents";
 import MyEvents from "./pages/myEvents";
 import Account from "./pages/Account";
 import AddEvent from "./pages/AddEvent";
@@ -53,6 +53,7 @@ import "@ionic/react/css/palettes/dark.system.css";
 /* Theme variables */
 import "./theme/variables.css";
 import { APIProvider } from "@vis.gl/react-google-maps";
+import FindEvents from "./pages/FindEvents";
 
 setupIonicReact();
 
@@ -82,7 +83,7 @@ const App: React.FC = () => {
                 <Redirect exact path="/" to="/featured" />
 
                 <Route path="/featured" render={() => <Featured />} exact={true} />
-                <Route path="/search" render={() => <Search />} exact={true} />
+                <Route path="/find" render={() => <FindEvents />} exact={true} />
                 <Route path="/myevents" render={() => <MyEvents />} exact={true} />
                 <Route path="/account" render={() => <Account />} exact={true} />
 
@@ -96,9 +97,9 @@ const App: React.FC = () => {
                   <IonIcon icon={starSharp} />
                   <IonLabel>Featured</IonLabel>
                 </IonTabButton>
-                <IonTabButton tab="search" href="/search">
+                <IonTabButton tab="find" href="/find">
                   <IonIcon icon={searchSharp} />
-                  <IonLabel>Search Events</IonLabel>
+                  <IonLabel>Find Events</IonLabel>
                 </IonTabButton>
                 <IonTabButton tab="myEvents" href="/myevents">
                   <IonIcon icon={calendarSharp} />

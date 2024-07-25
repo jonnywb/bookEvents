@@ -1,5 +1,6 @@
 .author {
   --background: var(--ion-color-primary-lite);
+  background-color: var(--ion-color-primary-lite);
 }
 
 .literary {
@@ -20,6 +21,7 @@
 
 .workshop {
   --background: var(--ion-color-quaternary-lite);
+  background-color: var(--ion-color-quaternary-lite);
 }
 
 ion-card-subtitle {

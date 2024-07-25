@@ -1,4 +1,14 @@
-import { IonButton, IonContent, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar, useIonRouter } from "@ionic/react";
+import {
+  IonButton,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonIcon,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  useIonRouter,
+} from "@ionic/react";
 
 import { getFirestore, query, collection, getDocs, where } from "firebase/firestore";
 import FB from "../config/FirebaseConfig";
@@ -54,7 +64,6 @@ const Featured: React.FC = () => {
             <IonTitle size="large">Featured Events</IonTitle>
           </IonToolbar>
         </IonHeader>
-
         <EventsCardList events={events} getEvents={getEvents} />
       </IonContent>
     </IonPage>

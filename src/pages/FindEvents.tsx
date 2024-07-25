@@ -5,7 +5,6 @@ import {
   IonHeader,
   IonPage,
   IonRow,
-  IonSearchbar,
   IonSelect,
   IonSelectOption,
   IonTitle,
@@ -17,7 +16,7 @@ import FB from "../config/FirebaseConfig";
 import { collection, query, getDocs, where, getFirestore } from "firebase/firestore";
 import EventCardList from "../components/EventCardList";
 
-const Search: React.FC = () => {
+const FindEvents: React.FC = () => {
   const db = getFirestore(FB);
 
   const [events, setEvents] = useState<any[]>([]);
@@ -56,16 +55,11 @@ const Search: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Categories</IonTitle>
+          <IonTitle>Find Events</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <IonRow className="ion-justify-content-center">
-          <IonCol size="11">
-            <IonSearchbar />
-          </IonCol>
-        </IonRow>
-        <IonGrid fixed>
+        <IonGrid>
           <IonRow className="ion-justify-content-center">
             <IonCol size="12">
               <IonSelect
@@ -94,4 +88,4 @@ const Search: React.FC = () => {
   );
 };
 
-export default Search;
+export default FindEvents;
