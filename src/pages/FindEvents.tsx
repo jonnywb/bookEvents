@@ -1,23 +1,28 @@
 import {
+  IonButton,
   IonCol,
   IonContent,
   IonGrid,
   IonHeader,
+  IonIcon,
   IonPage,
   IonRow,
   IonSelect,
   IonSelectOption,
   IonTitle,
   IonToolbar,
+  useIonRouter,
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 
 import FB from "../config/FirebaseConfig";
 import { collection, query, getDocs, where, getFirestore } from "firebase/firestore";
 import EventCardList from "../components/EventCardList";
+import { add } from "ionicons/icons";
 
 const FindEvents: React.FC = () => {
   const db = getFirestore(FB);
+  const router = useIonRouter();
 
   const [events, setEvents] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -56,6 +61,17 @@ const FindEvents: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonTitle>Find Events</IonTitle>
+          <IonButton
+            slot="end"
+            className="ion-margin-end create-event-button"
+            onClick={() => {
+              router.push("/add-event");
+            }}
+            fill="clear"
+          >
+            <IonIcon icon={add} slot="start" />
+            Add Event
+          </IonButton>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">

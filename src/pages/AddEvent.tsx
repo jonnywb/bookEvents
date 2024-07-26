@@ -48,6 +48,10 @@ const AddEvent: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
+  const [maxAttendees, setMaxAttendees] = useState<number | null>(null);
+
+  const [locationName, setLocationName] = useState<string | null>(null);
+  const [address, setAddress] = useState<string | null>(null);
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
 
@@ -71,9 +75,13 @@ const AddEvent: React.FC = () => {
     setSelectedCategory(value);
   };
 
-  const handleLocationChange = (lat: number, long: number) => {
-    setLatitude(lat);
-    setLongitude(long);
+  const handleLocationChange = (place: google.maps.places.PlaceResult | null) => {
+    if (place?.geometry?.location && place?.name && place?.formatted_address) {
+      setLocationName(place.name);
+      setAddress(place.formatted_address);
+      setLatitude(place.geometry?.location.lat());
+      setLongitude(place.geometry?.location.lng());
+    }
   };
 
   const handlePayfSelect = (event: CustomEvent) => {
@@ -101,12 +109,15 @@ const AddEvent: React.FC = () => {
       !eventName ||
       !description ||
       !selectedCategory ||
+      !locationName ||
+      !address ||
       !latitude ||
       !longitude ||
       !selectedDate ||
       !selectedTime ||
       !user ||
-      !selectedBook
+      !selectedBook ||
+      !maxAttendees
     ) {
       console.error("Please fill in all the fields, and make sure you are logged in.");
       return;
@@ -116,8 +127,10 @@ const AddEvent: React.FC = () => {
       eventName,
       description,
       featured,
+      numAttendees: 0,
+      maxAttendees,
       category: selectedCategory,
-      location: { lat: latitude, long: longitude },
+      location: { locationName, address, lat: latitude, long: longitude },
       date: selectedDate,
       time: selectedTime,
       createdAt: new Date().toISOString(),
@@ -217,6 +230,19 @@ const AddEvent: React.FC = () => {
                       onIonChange={(e) => setDescription(e.detail.value!)}
                     />
 
+                    <IonInput
+                      type="number"
+                      placeholder="Max Attendees"
+                      label="Max Attendees"
+                      labelPlacement="floating"
+                      fill="outline"
+                      mode="md"
+                      clearInput
+                      value={maxAttendees}
+                      onIonChange={(e) => setMaxAttendees(parseInt(e.detail.value!, 10))}
+                      className="ion-margin-top"
+                    />
+
                     <IonSelect
                       fill="outline"
                       label="Pay as you feel?"
@@ -246,7 +272,9 @@ const AddEvent: React.FC = () => {
                         className="ion-margin-top"
                       />
                     )}
+
                     <LocationPicker onLocationChange={handleLocationChange} />
+
                     <IonRow className="ion-justify-content-center">
                       <IonCol size="12" sizeSm="8" sizeMd="6" className="ion-align-items-center">
                         <DateTime handleTimeChange={handleTimeChange} />

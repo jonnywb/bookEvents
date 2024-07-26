@@ -4,6 +4,7 @@ export type User = {
   uid: string;
   displayName: string;
   email: string;
+  attendees?: string[];
 };
 
 export interface UserContextType {
