@@ -12,15 +12,17 @@ import {
 
 import { getFirestore, query, collection, getDocs, where } from "firebase/firestore";
 import FB from "../config/FirebaseConfig";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { add } from "ionicons/icons";
 
 import EventsCardList from "../components/EventCardList";
 
 import "./Featured.css";
+import { UserContext } from "../context/UserContext";
 
 const Featured: React.FC = () => {
   const db = getFirestore(FB);
+  const { user } = useContext(UserContext) || {};
 
   const [events, setEvents] = useState([]) as any[];
 
@@ -45,17 +47,19 @@ const Featured: React.FC = () => {
       <IonHeader translucent={true}>
         <IonToolbar>
           <IonTitle>Featured Events</IonTitle>
-          <IonButton
-            slot="end"
-            className="ion-margin-end create-event-button"
-            onClick={() => {
-              router.push("/add-event");
-            }}
-            fill="clear"
-          >
-            <IonIcon icon={add} slot="start" />
-            Add Event
-          </IonButton>
+          {user?.staffMember && (
+            <IonButton
+              slot="end"
+              className="ion-margin-end create-event-button"
+              onClick={() => {
+                router.push("/add-event");
+              }}
+              fill="clear"
+            >
+              <IonIcon icon={add} slot="start" />
+              Add Event
+            </IonButton>
+          )}
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen={true}>
