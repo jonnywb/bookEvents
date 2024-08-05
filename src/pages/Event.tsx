@@ -176,6 +176,31 @@ const Event: React.FC = () => {
     const { remainingPlaces, createdAtDate, createdAtTime } = prepareEventData();
 
     const { price, payAsYouFeel } = eventData;
+
+    const generateGoogleCalendarUrl = (eventData: any) => {
+      const startDate = new Date(eventData.date);
+      const [hours, minutes] = eventData.time.split(":");
+      startDate.setHours(parseInt(hours, 10), parseInt(minutes, 10));
+
+      const endDate = new Date(startDate.getTime() + 60 * 60 * 1000); // Add 1 hour to start time
+
+      const formatDateTime = (date: Date) => {
+        return date.toISOString().replace(/-|:|\.\d{3}/g, "");
+      };
+
+      const startDateTime = formatDateTime(startDate);
+      const endDateTime = formatDateTime(endDate);
+
+      const location = `${eventData.location.locationName}, ${eventData.location.address}`;
+      const details = `Event: ${eventData.eventName}\nLocation: ${location}\nDescription: ${eventData.description}`;
+
+      return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+        eventData.eventName
+      )}&dates=${startDateTime}/${endDateTime}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(
+        location
+      )}&sf=true&output=xml`;
+    };
+
     return (
       <IonPage>
         <IonHeader>
@@ -315,7 +340,19 @@ const Event: React.FC = () => {
             </IonRow>
 
             <IonRow>
-              <IonCol size="12" style={{ display: "flex", justifyContent: "end" }}>
+              {signedUp && (
+                <IonCol size="4">
+                  <IonButton
+                    onClick={() => {
+                      const googleCalendarUrl = generateGoogleCalendarUrl(eventData);
+                      window.open(googleCalendarUrl, "_blank");
+                    }}
+                  >
+                    Add to your calendar
+                  </IonButton>
+                </IonCol>
+              )}
+              <IonCol size={signedUp ? "8" : "12"} style={{ display: "flex", justifyContent: "end" }}>
                 <IonText>
                   <p style={{ fontSize: "0.8em", color: "var(--ion-color-dark-tint)" }}>
                     Event Created: {createdAtDate} at {createdAtTime}

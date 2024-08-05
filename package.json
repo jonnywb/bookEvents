@@ -37,6 +37,7 @@
     "axios": "^1.7.3",
     "dotenv": "^16.4.5",
     "firebase": "^10.12.3",
+    "gapi-script": "^1.2.0",
     "ionicons": "^7.0.0",
     "libphonenumber-js": "^1.11.5",
     "react": "^18.2.0",
