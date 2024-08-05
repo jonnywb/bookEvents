@@ -6,53 +6,46 @@ import {
   IonCardTitle,
   IonIcon,
   IonInput,
+  useIonRouter,
 } from "@ionic/react";
 import { createOutline } from "ionicons/icons";
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 
-import { UserContext } from "../context/UserContext";
+import { useUserContext } from "../context/UserContext";
+import { getUserByEmailPw } from "../utils/getUser";
 
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import FB from "../config/FirebaseConfig";
-
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { auth, db } from "../config/FirebaseConfig";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 
 const Register: React.FC = () => {
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [disabled, setDisabled] = useState<boolean>(false);
-
-  const userContext = useContext(UserContext);
-
-  const auth = getAuth(FB);
-  const db = getFirestore(FB);
+  const router = useIonRouter();
+  const { setUser } = useUserContext();
 
   const doRegistration = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (email && password) {
+    if (email && password && username) {
       try {
         const { user } = await createUserWithEmailAndPassword(auth, email, password);
 
-        const docRef = await setDoc(doc(db, "users", user.uid), {
+        await setDoc(doc(db, "users", user.uid), {
           displayName: username,
           email: email,
           createdAt: new Date(),
         });
 
-        console.log(docRef);
-
-        userContext?.setUser({
-          uid: user.uid,
-          displayName: username,
-          email: email,
-        });
+        await getUserByEmailPw(email, password, setUser);
+        router.push("/", "root");
       } catch (err) {
         console.log("error creating user", err);
       }
     } else {
-      console.log("invalid email and or password", email, password);
+      console.log("Invalid details, please try again", email, password, username);
     }
   };
 

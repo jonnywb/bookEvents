@@ -1,15 +1,15 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, useIonRouter } from "@ionic/react";
 
-import { getFirestore, query, collection, getDocs, where } from "firebase/firestore";
-import FB from "../config/FirebaseConfig";
-import { useState, useEffect, useContext } from "react";
+import { db } from "../config/FirebaseConfig";
+import { query, collection, getDocs, where } from "firebase/firestore";
+
+import { useState, useEffect } from "react";
 
 import EventsCardList from "../components/EventCardList";
-import { UserContext } from "../context/UserContext";
+import { useUserContext } from "../context/UserContext";
 
 const MyEvents: React.FC = () => {
-  const db = getFirestore(FB);
-  const { user } = useContext(UserContext) || {};
+  const { user } = useUserContext() || {};
 
   const [events, setEvents] = useState([]) as any[];
 

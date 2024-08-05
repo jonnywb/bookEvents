@@ -16,11 +16,11 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
-import FB from "../config/FirebaseConfig";
-import { getFirestore, doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { db } from "../config/FirebaseConfig";
+import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import {
   calendarClearOutline,
   cardOutline,
@@ -31,19 +31,17 @@ import {
   starOutline,
   timeOutline,
 } from "ionicons/icons";
-import { UserContext } from "../context/UserContext";
+import { useUserContext } from "../context/UserContext";
 
 import { AdvancedMarker, Map } from "@vis.gl/react-google-maps";
 
 const Event: React.FC = () => {
   const [eventData, setEventData] = useState<any | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [signedUp, setSignedUp] = useState<boolean>(false);
   const [eventFull, setEventFull] = useState<boolean>(false);
 
   const { id } = useParams<{ id: string }>();
-  const db = getFirestore(FB);
-  const { user } = useContext(UserContext) || {};
+  const { user } = useUserContext();
 
   const fetchEvent = async () => {
     if (id) {
@@ -64,9 +62,7 @@ const Event: React.FC = () => {
 
   useEffect(() => {
     if (!id || !user) return;
-    setIsLoading(true);
     fetchEvent();
-    setIsLoading(false);
   }, [id, user]);
 
   const cardClass = (category: string) => {
@@ -165,9 +161,7 @@ const Event: React.FC = () => {
     return { remainingPlaces, createdAtDate, createdAtTime };
   };
 
-  if (isLoading) {
-    return <IonContent className="ion-padding">Loading...</IonContent>;
-  } else if (eventData) {
+  if (eventData) {
     const { remainingPlaces, createdAtDate, createdAtTime } = prepareEventData();
     return (
       <IonPage>

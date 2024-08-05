@@ -23,19 +23,19 @@ import {
   IonToggle,
   IonLabel,
 } from "@ionic/react";
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 
 import LocationPicker from "../components/LocationPicker";
 import AddBook from "../components/AddBook";
 
-import { getFirestore, addDoc, collection } from "firebase/firestore";
-import FB from "../config/FirebaseConfig";
-import { UserContext } from "../context/UserContext";
+import { db } from "../config/FirebaseConfig";
+import { addDoc, collection } from "firebase/firestore";
+
+import { useUserContext } from "../context/UserContext";
 import DateTime from "../components/DateTime";
 
 const AddEvent: React.FC = () => {
-  const db = getFirestore(FB);
-  const { user } = useContext(UserContext) || {};
+  const { user } = useUserContext();
   const router = useIonRouter();
 
   const [eventName, setEventName] = useState<string>("");

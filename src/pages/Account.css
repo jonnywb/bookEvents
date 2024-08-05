@@ -1,0 +1,36 @@
+.profile-header {
+  display: flex;
+  align-items: center;
+}
+
+.profile-header ion-card-title {
+  width: fit-content;
+}
+
+.profile-header ion-card-subtitle {
+  width: fit-content;
+}
+
+.profile-card {
+  border: 0.2rem solid var(--ion-color-primary);
+}
+
+ion-input.disabled {
+  --background: var(--ion-color-light-shade);
+  --border-width: 0;
+}
+
+.profileImageButton {
+  height: 10rem;
+  width: 10rem;
+}
+
+.profileImageButton img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profileImageButton img:hover {
+  opacity: 0.8;
+}

@@ -1,4 +1,6 @@
-import { useContext } from "react";
+import { useState, useEffect } from "react";
+import { auth } from "./config/FirebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
 import { Redirect, Route } from "react-router-dom";
 import {
   IonApp,
@@ -13,11 +15,14 @@ import {
 import { IonReactRouter } from "@ionic/react-router";
 import { calendarSharp, personSharp, searchSharp, starSharp } from "ionicons/icons";
 
-import { UserContext } from "./context/UserContext";
+import "./App.css";
+
+import { getUserById } from "./utils/getUser";
+import { useUserContext } from "./context/UserContext";
 
 import Home from "./pages/Home";
 import Featured from "./pages/Featured";
-import Search from "./pages/FindEvents";
+import FindEvents from "./pages/FindEvents";
 import MyEvents from "./pages/myEvents";
 import Account from "./pages/Account";
 import AddEvent from "./pages/AddEvent";
@@ -53,69 +58,79 @@ import "@ionic/react/css/palettes/dark.system.css";
 /* Theme variables */
 import "./theme/variables.css";
 import { APIProvider } from "@vis.gl/react-google-maps";
-import FindEvents from "./pages/FindEvents";
 
 setupIonicReact();
 
 const App: React.FC = () => {
-  const { user } = useContext(UserContext) || {};
+  const { user, setUser } = useUserContext();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        getUserById(user.uid, setUser);
+      } else {
+        setUser(null);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   if (!user) {
     return (
       <IonApp>
         <IonReactRouter>
-          <Route path="/" render={() => <Home />} />
+          <IonRouterOutlet>
+            <Route path="/" component={Home} />
+          </IonRouterOutlet>
         </IonReactRouter>
       </IonApp>
     );
-  } else {
-    return (
-      <IonApp>
+  }
+
+  return (
+    <IonApp>
+      <IonReactRouter>
         <APIProvider
           apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
           onLoad={() => {
             console.log("Maps API has loaded.");
           }}
         >
-          <IonReactRouter>
-            <IonTabs>
-              <IonRouterOutlet>
-                <Redirect exact path="/" to="/featured" />
+          <IonTabs>
+            <IonRouterOutlet>
+              <Redirect exact path="/" to="/featured" />
 
-                <Route path="/featured" render={() => <Featured />} exact={true} />
-                <Route path="/find" render={() => <FindEvents />} exact={true} />
-                <Route path="/myevents" render={() => <MyEvents />} exact={true} />
-                <Route path="/account" render={() => <Account />} exact={true} />
+              <Route path="/featured" component={Featured} exact={true} />
+              <Route path="/find" component={FindEvents} exact={true} />
+              <Route path="/myevents" component={MyEvents} exact={true} />
+              <Route path="/account" component={Account} exact={true} />
+              <Route path="/event/:id" component={Event} exact={true} />
+              <Route path="/add-event" component={AddEvent} exact={true} />
+            </IonRouterOutlet>
 
-                <Route path="/event/:id" render={() => <Event />} exact={true} />
-
-                <Route path="/add-event" render={() => <AddEvent />} exact={true} />
-              </IonRouterOutlet>
-
-              <IonTabBar slot="bottom">
-                <IonTabButton tab="featured" href="/featured">
-                  <IonIcon icon={starSharp} />
-                  <IonLabel>Featured</IonLabel>
-                </IonTabButton>
-                <IonTabButton tab="find" href="/find">
-                  <IonIcon icon={searchSharp} />
-                  <IonLabel>Find Events</IonLabel>
-                </IonTabButton>
-                <IonTabButton tab="myEvents" href="/myevents">
-                  <IonIcon icon={calendarSharp} />
-                  <IonLabel>My Events</IonLabel>
-                </IonTabButton>
-                <IonTabButton tab="account" href="/account">
-                  <IonIcon icon={personSharp} />
-                  <IonLabel>Account</IonLabel>
-                </IonTabButton>
-              </IonTabBar>
-            </IonTabs>
-          </IonReactRouter>
+            <IonTabBar slot="bottom">
+              <IonTabButton tab="featured" href="/featured">
+                <IonIcon icon={starSharp} />
+                <IonLabel>Featured</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="find" href="/find">
+                <IonIcon icon={searchSharp} />
+                <IonLabel>Find Events</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="myEvents" href="/myevents">
+                <IonIcon icon={calendarSharp} />
+                <IonLabel>My Events</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="account" href="/account">
+                <IonIcon icon={personSharp} />
+                <IonLabel>Account</IonLabel>
+              </IonTabButton>
+            </IonTabBar>
+          </IonTabs>
         </APIProvider>
-      </IonApp>
-    );
-  }
+      </IonReactRouter>
+    </IonApp>
+  );
 };
 
 export default App;

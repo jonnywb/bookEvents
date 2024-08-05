@@ -6,45 +6,25 @@ import {
   IonCardTitle,
   IonIcon,
   IonInput,
+  useIonRouter,
 } from "@ionic/react";
 import { logInOutline } from "ionicons/icons";
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
+import { getUserByEmailPw } from "../utils/getUser";
 
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, getDoc, doc } from "firebase/firestore";
-import FB from "../config/FirebaseConfig";
-
-import { UserContext } from "../context/UserContext";
+import { useUserContext } from "../context/UserContext";
 
 const Login: React.FC = () => {
-  const auth = getAuth(FB);
-  const db = getFirestore(FB);
-
-  const userContext = useContext(UserContext);
-
+  const { setUser } = useUserContext();
+  const router = useIonRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   const doLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (email && password) {
-      const { user } = await signInWithEmailAndPassword(auth, email, password);
-
-      const userRef = await doc(db, "users", user.uid);
-
-      const userSnap = await getDoc(userRef);
-
-      const data = userSnap.data();
-
-      if (data) {
-        userContext?.setUser({
-          uid: user.uid,
-          email: data.email,
-          displayName: data.displayName,
-        });
-      }
-    }
+    await getUserByEmailPw(email, password, setUser);
+    router.push("/", "root");
   };
 
   return (
