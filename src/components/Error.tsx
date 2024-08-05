@@ -1,4 +1,3 @@
-// Error.tsx
 import { IonToast } from "@ionic/react";
 import React from "react";
 

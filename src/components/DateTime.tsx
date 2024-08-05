@@ -1,20 +1,8 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 
-import {
-  IonButton,
-  IonButtons,
-  IonContent,
-  IonDatetime,
-  IonDatetimeButton,
-  IonHeader,
-  IonLabel,
-  IonModal,
-  IonTitle,
-  IonToolbar,
-} from "@ionic/react";
+import { IonDatetime, IonDatetimeButton, IonModal } from "@ionic/react";
 
 import "./DateTime.css";
-import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 
 const today = new Date().toISOString().split("T")[0]; // Get today's date in 'YYYY-MM-DD' format
 
