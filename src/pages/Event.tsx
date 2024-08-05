@@ -10,6 +10,7 @@ import {
   IonHeader,
   IonIcon,
   IonItem,
+  IonLoading,
   IonModal,
   IonPage,
   IonRow,
@@ -39,6 +40,7 @@ import Payment from "../components/Payment";
 
 import { Elements } from "@stripe/react-stripe-js";
 import { stripePromise } from "../utils/stripe";
+import Error from "../components/Error";
 
 const Event: React.FC = () => {
   const [eventData, setEventData] = useState<any | null>(null);
@@ -46,25 +48,40 @@ const Event: React.FC = () => {
   const [eventFull, setEventFull] = useState<boolean>(false);
   const [showPayment, setShowPayment] = useState<boolean>(false);
   const [paymentComplete, setPaymentComplete] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const { id } = useParams<{ id: string }>();
   const { user } = useUserContext();
 
   const fetchEvent = async () => {
+    setLoading(true);
     if (id) {
-      const docRef = doc(db, "events", id);
-      const docSnap = await getDoc(docRef);
+      try {
+        const docRef = doc(db, "events", id);
+        const docSnap = await getDoc(docRef);
 
-      if (docSnap.exists()) {
-        const newData = { id: docSnap.id, ...docSnap.data() } as any;
-        setEventData(newData);
-        if (newData.attendees?.includes(user?.uid)) {
-          setSignedUp(true);
+        if (docSnap.exists()) {
+          const newData = { id: docSnap.id, ...docSnap.data() } as any;
+          setEventData(newData);
+          if (newData.attendees?.includes(user?.uid)) {
+            setSignedUp(true);
+          }
+        } else {
+          console.log("No such document!");
         }
-      } else {
-        console.log("No such document!");
+      } catch (error) {
+        console.error("Error fetching event: ", error);
+        setErrorMessage("Error fetching event");
+        setIsOpen(true);
       }
+    } else {
+      console.log("No event ID found");
+      setErrorMessage("No event ID found");
+      setIsOpen(true);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -211,6 +228,7 @@ const Event: React.FC = () => {
             <IonTitle>Event</IonTitle>
           </IonToolbar>
         </IonHeader>
+        <IonLoading isOpen={loading} message={"Loading..."} />
         <IonContent className={"ion-padding " + cardClass(eventData.category)} fullscreen>
           <IonGrid fixed className="ion-padding" style={{ boxShadow: "0px 1px 0px black" }}>
             <IonRow className="ion-justify-content-center">
@@ -373,6 +391,8 @@ const Event: React.FC = () => {
               />
             </Elements>
           </IonModal>
+
+          <Error message={errorMessage} setIsOpen={setIsOpen} isOpen={isOpen} />
         </IonContent>
       </IonPage>
     );

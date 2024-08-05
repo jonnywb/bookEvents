@@ -36,6 +36,7 @@ import { ref, uploadString, getDownloadURL } from "firebase/storage";
 
 import { Camera, CameraResultType } from "@capacitor/camera";
 import { onAuthStateChanged } from "firebase/auth";
+import Error from "../components/Error";
 
 const Account: React.FC = () => {
   const { user, logout, setUser } = useUserContext();
@@ -50,6 +51,9 @@ const Account: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [image, setImage] = useState("");
 
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
   const maskitoOptions = maskitoPhoneOptionsGenerator({
     countryIsoCode: "GB",
     metadata,
@@ -62,6 +66,8 @@ const Account: React.FC = () => {
 
     if (!user) {
       console.error("User is not defined.");
+      setErrorMessage("No user Detected.");
+      setIsOpen(true);
       return;
     }
 
@@ -78,6 +84,9 @@ const Account: React.FC = () => {
 
     if (!userDoc.exists()) {
       console.error(`User document with uid ${user.uid} not found.`);
+      setErrorMessage("User document not found.");
+      setIsOpen(true);
+      return;
     }
 
     const userData = userDoc.data();
@@ -110,15 +119,30 @@ const Account: React.FC = () => {
       }
 
       if (image) {
-        const imageUrl = await handleUpload();
-        updatedData.profilePicture = imageUrl;
+        try {
+          const imageUrl = await handleUpload();
+          updatedData.profilePicture = imageUrl;
+        } catch (error) {
+          console.error("Error uploading image: ", error);
+          setErrorMessage("Error uploading image.");
+          setIsOpen(true);
+        }
       }
 
       if (Object.keys(updatedData).length > 0) {
-        await updateDoc(userDocRef, {
-          ...updatedData,
-        });
+        try {
+          await updateDoc(userDocRef, {
+            ...updatedData,
+          });
+        } catch (error) {
+          console.error("Error updating user document: ", error);
+          setErrorMessage("Error updating user document.");
+          setIsOpen(true);
+          return;
+        }
       } else {
+        setErrorMessage("No changes to update");
+        setIsOpen(true);
         console.log("No changes to update");
       }
     }
@@ -330,6 +354,7 @@ const Account: React.FC = () => {
               </IonButton>
             </IonContent>
           </IonModal>
+          <Error isOpen={isOpen} message={errorMessage} setIsOpen={setIsOpen} />
         </IonContent>
       </IonPage>
     );

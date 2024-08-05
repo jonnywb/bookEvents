@@ -46,8 +46,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       await signOut(auth);
       setUser(null);
     } catch (error) {
-      console.error("Error signing out:", error);
-      // Handle sign-out error here
+      throw new Error("Error logging out.");
     }
   };
 

@@ -33,6 +33,7 @@ import { addDoc, collection } from "firebase/firestore";
 
 import { useUserContext } from "../context/UserContext";
 import DateTime from "../components/DateTime";
+import Error from "../components/Error";
 
 const AddEvent: React.FC = () => {
   const { user } = useUserContext();
@@ -59,6 +60,10 @@ const AddEvent: React.FC = () => {
 
   const [showPrice, setShowPrice] = useState<boolean>(false);
   const [price, setPrice] = useState<number | null>(null);
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleTimeChange = (e: CustomEvent) => {
     const value = e.detail.value;
@@ -119,7 +124,8 @@ const AddEvent: React.FC = () => {
       !selectedBook ||
       !maxAttendees
     ) {
-      console.error("Please fill in all the fields, and make sure you are logged in.");
+      setErrorMessage("Please ensure all fields are filled in.");
+      setIsOpen(true);
       return;
     }
 
@@ -155,6 +161,8 @@ const AddEvent: React.FC = () => {
       console.log("Document written with ID: ", docRef.id);
       router.push("/featured", "root");
     } catch (error) {
+      setErrorMessage("Error adding document, please try again.");
+      setIsOpen(true);
       console.error("Error adding document: ", error);
     }
   };
@@ -296,6 +304,7 @@ const AddEvent: React.FC = () => {
             </IonCol>
           </IonRow>
         </IonGrid>
+        <Error message={errorMessage} setIsOpen={setIsOpen} isOpen={isOpen} />
       </IonContent>
     </IonPage>
   );

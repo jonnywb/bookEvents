@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, useIonRouter } from "@ionic/react";
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonLoading } from "@ionic/react";
 
 import { db } from "../config/FirebaseConfig";
 import { query, collection, getDocs, where } from "firebase/firestore";
@@ -7,19 +7,23 @@ import { useState, useEffect } from "react";
 
 import EventsCardList from "../components/EventCardList";
 import { useUserContext } from "../context/UserContext";
+import Error from "../components/Error";
 
 const MyEvents: React.FC = () => {
   const { user } = useUserContext() || {};
 
   const [events, setEvents] = useState([]) as any[];
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [showError, setShowError] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     getMyEvents();
   }, []);
 
   const getMyEvents = async () => {
+    setLoading(true);
     if (!user) {
-      console.error("User not logged in");
       return;
     }
 
@@ -37,10 +41,11 @@ const MyEvents: React.FC = () => {
       console.log(`Events successfully fetched for user ${user.uid}`);
     } catch (error) {
       console.error("Error fetching events: ", error);
+      setErrorMessage("Error fetching events");
+      setShowError(true);
     }
+    setLoading(false);
   };
-
-  const router = useIonRouter();
 
   return (
     <IonPage>
@@ -55,7 +60,9 @@ const MyEvents: React.FC = () => {
             <IonTitle size="large">My Events</IonTitle>
           </IonToolbar>
         </IonHeader>
+        <IonLoading isOpen={loading} message={"loading..."} />
         <EventsCardList events={events} getEvents={getMyEvents} />
+        <Error message={errorMessage} setIsOpen={setShowError} isOpen={showError} />
       </IonContent>
     </IonPage>
   );

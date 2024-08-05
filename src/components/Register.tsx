@@ -7,6 +7,8 @@ import {
   IonIcon,
   IonInput,
   useIonRouter,
+  InputCustomEvent,
+  InputInputEventDetail,
 } from "@ionic/react";
 import { createOutline } from "ionicons/icons";
 import React, { useState } from "react";
@@ -19,6 +21,8 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import Error from "../components/Error";
 
+import { validateEmail } from "../utils/validation";
+
 const Register: React.FC = () => {
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -26,6 +30,10 @@ const Register: React.FC = () => {
   const [disabled, setDisabled] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isErrorOpen, setIsErrorOpen] = useState<boolean>(false);
+
+  const [emailIsValid, setEmailIsValid] = useState<boolean>();
+  const [emailIsTouched, setEmailIsTouched] = useState(false);
+
   const router = useIonRouter();
   const { setUser } = useUserContext();
 
@@ -65,6 +73,22 @@ const Register: React.FC = () => {
     }
   };
 
+  const handleEmailInput = (e: Event) => {
+    const value = (e.target as HTMLInputElement).value;
+
+    setEmailIsValid(undefined);
+
+    if (value === "") return;
+
+    setEmail(value);
+
+    validateEmail(value) !== null ? setEmailIsValid(true) : setEmailIsValid(false);
+  };
+
+  const markTouched = () => {
+    setEmailIsTouched(true);
+  };
+
   return (
     <>
       {errorMessage && <Error message={errorMessage} isOpen={isErrorOpen} setIsOpen={setIsErrorOpen} />}
@@ -89,16 +113,21 @@ const Register: React.FC = () => {
           />
 
           <IonInput
-            className="ion-margin-top"
+            className={`ion-margin-top ${emailIsValid && "ion-valid"} ${!emailIsValid && "ion-invalid"} ${
+              emailIsTouched && "ion-touched"
+            }`}
             mode="md"
             label="Email"
             type="email"
             placeholder="Email"
             labelPlacement="floating"
+            helperText="Enter a valid email"
+            errorText="Invalid Email"
             fill="outline"
             clearInput
             required
-            onIonInput={(e: any) => setEmail(e.target.value)}
+            onIonInput={(e) => handleEmailInput(e)}
+            onIonBlur={() => markTouched()}
           />
           <IonInput
             className="ion-margin-top"

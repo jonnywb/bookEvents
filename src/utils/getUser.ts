@@ -35,12 +35,11 @@ const getUserById = async (id: string, setUser: (user: User | null) => void) => 
       const userData = userSnap.data() as User;
       setUser({ ...userData, uid: userSnap.id });
     } else {
-      console.error(`User document with id ${id} does not exist.`);
-      setUser(null); // Handle user document does not exist
+      setUser(null);
+      throw new Error(`User document with id ${id} does not exist.`);
     }
   } catch (error) {
-    console.error("Error fetching user data:", error);
-    // Handle error fetching user data here
+    throw new Error("Error fetching user data.");
   }
 };
 

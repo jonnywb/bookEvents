@@ -12,6 +12,7 @@ import {
   IonTitle,
   IonToolbar,
   useIonRouter,
+  IonLoading,
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 
@@ -20,6 +21,7 @@ import { collection, query, getDocs, where } from "firebase/firestore";
 import EventCardList from "../components/EventCardList";
 import { add } from "ionicons/icons";
 import { useUserContext } from "../context/UserContext";
+import Error from "../components/Error";
 
 const FindEvents: React.FC = () => {
   const router = useIonRouter();
@@ -27,6 +29,9 @@ const FindEvents: React.FC = () => {
 
   const [events, setEvents] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const categories = [
     "Author Meet and Greet",
@@ -44,17 +49,25 @@ const FindEvents: React.FC = () => {
   }, [selectedCategory]);
 
   const getEvents = async () => {
-    const q = query(collection(db, "events"), where("category", "==", selectedCategory));
+    setLoading(true);
+    try {
+      const q = query(collection(db, "events"), where("category", "==", selectedCategory));
 
-    const querySnapshot = await getDocs(q);
+      const querySnapshot = await getDocs(q);
 
-    setEvents([]);
+      setEvents([]);
 
-    querySnapshot.forEach((doc) => {
-      const newDoc = { ...doc.data(), id: doc.id };
+      querySnapshot.forEach((doc) => {
+        const newDoc = { ...doc.data(), id: doc.id };
 
-      setEvents((prevEvents) => [...prevEvents, newDoc]);
-    });
+        setEvents((prevEvents) => [...prevEvents, newDoc]);
+      });
+    } catch (error) {
+      console.error(error);
+      setErrorMessage("Error fetching events");
+      setIsOpen(true);
+    }
+    setLoading(false);
   };
 
   return (
@@ -100,8 +113,10 @@ const FindEvents: React.FC = () => {
               </IonSelect>
             </IonCol>
           </IonRow>
+          <IonLoading isOpen={loading} message={"Fetching events..."} />
           <EventCardList events={events} getEvents={getEvents} />
         </IonGrid>
+        <Error message={errorMessage} isOpen={isOpen} setIsOpen={setIsOpen} />
       </IonContent>
     </IonPage>
   );

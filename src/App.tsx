@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { auth } from "./config/FirebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import { Redirect, Route } from "react-router-dom";
