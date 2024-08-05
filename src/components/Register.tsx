@@ -17,12 +17,15 @@ import { getUserByEmailPw } from "../utils/getUser";
 import { auth, db } from "../config/FirebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
+import Error from "../components/Error";
 
 const Register: React.FC = () => {
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [disabled, setDisabled] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isErrorOpen, setIsErrorOpen] = useState<boolean>(false);
   const router = useIonRouter();
   const { setUser } = useUserContext();
 
@@ -41,25 +44,30 @@ const Register: React.FC = () => {
 
         await getUserByEmailPw(email, password, setUser);
         router.push("/", "root");
-      } catch (err) {
-        console.log("error creating user", err);
+      } catch (error: any) {
+        setErrorMessage(error.message || "Error creating user. Please try again.");
+        setIsErrorOpen(true);
       }
     } else {
-      console.log("Invalid details, please try again", email, password, username);
+      setErrorMessage("Invalid details, please try again.");
+      setIsErrorOpen(true);
     }
   };
 
   const confirmPassword = (pw: string) => {
     if (pw !== password) {
       setDisabled(true);
-      console.log("passwords do not match");
+      setErrorMessage("Passwords do not match.");
+      setIsErrorOpen(true);
     } else {
       setDisabled(false);
+      setErrorMessage(null);
     }
   };
 
   return (
     <>
+      {errorMessage && <Error message={errorMessage} isOpen={isErrorOpen} setIsOpen={setIsErrorOpen} />}
       <IonCardHeader>
         <IonCardTitle>Register</IonCardTitle>
         <IonCardSubtitle>

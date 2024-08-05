@@ -13,7 +13,7 @@ import React, { useState } from "react";
 import { getUserByEmailPw } from "../utils/getUser";
 
 import { useUserContext } from "../context/UserContext";
-import Error from "../components/Error"; // Import the Error component
+import Error from "../components/Error";
 
 const Login: React.FC = () => {
   const { setUser } = useUserContext();
@@ -21,7 +21,7 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isErrorOpen, setIsErrorOpen] = useState<boolean>(false); // Add state to manage error toast visibility
+  const [isErrorOpen, setIsErrorOpen] = useState<boolean>(false);
 
   const doLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,17 +30,15 @@ const Login: React.FC = () => {
       await getUserByEmailPw(email, password, setUser);
       router.push("/", "root");
     } catch (error: any) {
-      setErrorMessage(error.message || "An unexpected error occurred. Please try again."); // Set error message
-      setIsErrorOpen(true); // Show error toast
+      setErrorMessage(error.message || "An unexpected error occurred. Please try again.");
+      setIsErrorOpen(true);
     }
   };
 
   return (
     <>
-      {errorMessage && <Error message={errorMessage} isOpen={isErrorOpen} setIsOpen={setIsErrorOpen} />}{" "}
-      {/* Render Error component conditionally */}
+      {errorMessage && <Error message={errorMessage} isOpen={isErrorOpen} setIsOpen={setIsErrorOpen} />}
       <IonCardHeader>
-        {/* Logo to be added here */}
         <IonCardTitle>Login</IonCardTitle>
         <IonCardSubtitle>
           <p>Enter your Login Details</p>
