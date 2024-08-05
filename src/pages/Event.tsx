@@ -10,6 +10,7 @@ import {
   IonHeader,
   IonIcon,
   IonItem,
+  IonModal,
   IonPage,
   IonRow,
   IonText,
@@ -34,11 +35,17 @@ import {
 import { useUserContext } from "../context/UserContext";
 
 import { AdvancedMarker, Map } from "@vis.gl/react-google-maps";
+import Payment from "../components/Payment";
+
+import { Elements } from "@stripe/react-stripe-js";
+import { stripePromise } from "../utils/stripe";
 
 const Event: React.FC = () => {
   const [eventData, setEventData] = useState<any | null>(null);
   const [signedUp, setSignedUp] = useState<boolean>(false);
   const [eventFull, setEventFull] = useState<boolean>(false);
+  const [showPayment, setShowPayment] = useState<boolean>(false);
+  const [paymentComplete, setPaymentComplete] = useState<boolean>(false);
 
   const { id } = useParams<{ id: string }>();
   const { user } = useUserContext();
@@ -83,9 +90,13 @@ const Event: React.FC = () => {
   };
 
   const handleSignUp = async () => {
-    const signUp = await eventSignUp();
-    if (signUp) {
-      setSignedUp(true);
+    setShowPayment(false);
+
+    if (paymentComplete) {
+      const signUp = await eventSignUp();
+      if (signUp) {
+        setSignedUp(true);
+      }
     }
   };
 
@@ -163,6 +174,8 @@ const Event: React.FC = () => {
 
   if (eventData) {
     const { remainingPlaces, createdAtDate, createdAtTime } = prepareEventData();
+
+    const { price, payAsYouFeel } = eventData;
     return (
       <IonPage>
         <IonHeader>
@@ -245,6 +258,7 @@ const Event: React.FC = () => {
                 </IonItem>
               </IonCol>
             </IonRow>
+
             <IonRow>
               <IonCol size="12">
                 <Map
@@ -293,12 +307,13 @@ const Event: React.FC = () => {
                   </div>
                 )}
 
-                <IonButton onClick={handleSignUp} disabled={signedUp || eventFull}>
+                <IonButton onClick={() => setShowPayment(true)} disabled={signedUp || eventFull}>
                   <IonIcon slot="start" icon={pencilOutline}></IonIcon>
                   {signedUp ? "Already Signed Up" : "Sign Up to Event"}
                 </IonButton>
               </IonCol>
             </IonRow>
+
             <IonRow>
               <IonCol size="12" style={{ display: "flex", justifyContent: "end" }}>
                 <IonText>
@@ -309,6 +324,18 @@ const Event: React.FC = () => {
               </IonCol>
             </IonRow>
           </IonGrid>
+
+          <IonModal isOpen={showPayment} onDidDismiss={handleSignUp}>
+            <Elements stripe={stripePromise}>
+              <Payment
+                setPaymentComplete={setPaymentComplete}
+                payAsYouFeel={payAsYouFeel}
+                price={price}
+                eventId={id}
+                setShowPayment={setShowPayment}
+              />
+            </Elements>
+          </IonModal>
         </IonContent>
       </IonPage>
     );
