@@ -96,7 +96,6 @@ const Payment: React.FC<PaymentProps> = ({ setPaymentComplete, price, payAsYouFe
     hidePostalCode: true,
     style: {
       base: {
-        // Customize base style here
         fontSize: "16px",
         color: "#32325d",
         "::placeholder": {
