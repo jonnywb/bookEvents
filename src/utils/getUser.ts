@@ -13,11 +13,16 @@ const getUserByEmailPw = async (email: string, password: string, setUser: (user:
       if (userSnap.exists()) {
         const userData = userSnap.data() as User;
         setUser({ ...userData, uid: userSnap.id });
+      } else {
+        throw new Error("User document does not exist.");
       }
     }
   } catch (error) {
-    console.error("Error signing in:", error);
-    // Handle sign-in error here
+    let errorMessage = "Error signing in.";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    throw new Error(errorMessage);
   }
 };
 

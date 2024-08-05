@@ -13,22 +13,32 @@ import React, { useState } from "react";
 import { getUserByEmailPw } from "../utils/getUser";
 
 import { useUserContext } from "../context/UserContext";
+import Error from "../components/Error"; // Import the Error component
 
 const Login: React.FC = () => {
   const { setUser } = useUserContext();
   const router = useIonRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isErrorOpen, setIsErrorOpen] = useState<boolean>(false); // Add state to manage error toast visibility
 
   const doLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    await getUserByEmailPw(email, password, setUser);
-    router.push("/", "root");
+    try {
+      await getUserByEmailPw(email, password, setUser);
+      router.push("/", "root");
+    } catch (error: any) {
+      setErrorMessage(error.message || "An unexpected error occurred. Please try again."); // Set error message
+      setIsErrorOpen(true); // Show error toast
+    }
   };
 
   return (
     <>
+      {errorMessage && <Error message={errorMessage} isOpen={isErrorOpen} setIsOpen={setIsErrorOpen} />}{" "}
+      {/* Render Error component conditionally */}
       <IonCardHeader>
         {/* Logo to be added here */}
         <IonCardTitle>Login</IonCardTitle>
