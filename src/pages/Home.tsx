@@ -32,6 +32,11 @@ const Home: React.FC = () => {
       <IonContent>
         <IonGrid fixed>
           <IonRow className="ion-justify-content-center">
+            <IonCol sizeXs="8" sizeSm="8" sizeMd="6" sizeLg="4.5" sizeXl="4">
+              <img src="assets/icon/icon.png" alt="bookEvents" />
+            </IonCol>
+          </IonRow>
+          <IonRow className="ion-justify-content-center">
             <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
               <IonCard>
                 {!showRegister && <Login />}
