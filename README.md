@@ -15,3 +15,8 @@ Finally, run "ionic serve" in the terminal to see the site in your browser.
 To see the mobile app development requires the installation of xcode / simulator and android development toolkits.
 
 Once they've been installed, run "ionic cap run *android/ios* -l --external" (edit to ios or android only)
+
+To test as a staff member use login:
+
+jonnywb.dev@gmail.com
+testytest123
