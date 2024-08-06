@@ -23,17 +23,11 @@ const Home: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>bookEvents</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-
       <IonContent>
         <IonGrid fixed>
           <IonRow className="ion-justify-content-center">
-            <IonCol sizeXs="8" sizeSm="8" sizeMd="6" sizeLg="4.5" sizeXl="4">
-              <img src="assets/icon/icon.png" alt="bookEvents" />
+            <IonCol sizeXs="7" sizeSm="7" sizeMd="5" sizeLg="3.5" sizeXl="3">
+              <img src="/icon.png" alt="bookEvents" />
             </IonCol>
           </IonRow>
           <IonRow className="ion-justify-content-center">
