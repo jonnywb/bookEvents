@@ -20,8 +20,6 @@ import {
   IonContent,
   IonList,
   IonItem,
-  IonMenuButton,
-  IonButtons,
   IonSplitPane,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
@@ -57,7 +55,7 @@ import "./theme/variables.css";
 setupIonicReact();
 
 const App: React.FC = () => {
-  const { user, setUser } = useUserContext();
+  const { user, setUser, logout } = useUserContext();
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -107,7 +105,7 @@ const UnauthenticatedApp: React.FC = () => (
 );
 
 const MobileLayout: React.FC = () => (
-  <>
+  <IonTabs>
     <IonRouterOutlet>
       <Redirect exact path="/" to="/featured" />
       <Route path="/featured" component={Featured} exact />
@@ -117,27 +115,26 @@ const MobileLayout: React.FC = () => (
       <Route path="/event/:id" component={Event} exact />
       <Route path="/add-event" component={AddEvent} exact />
     </IonRouterOutlet>
-    <IonTabs>
-      <IonTabBar slot="bottom">
-        <IonTabButton tab="featured" href="/featured">
-          <IonIcon icon={starSharp} />
-          <IonLabel>Featured</IonLabel>
-        </IonTabButton>
-        <IonTabButton tab="find" href="/find">
-          <IonIcon icon={searchSharp} />
-          <IonLabel>Find Events</IonLabel>
-        </IonTabButton>
-        <IonTabButton tab="myEvents" href="/myevents">
-          <IonIcon icon={calendarSharp} />
-          <IonLabel>My Events</IonLabel>
-        </IonTabButton>
-        <IonTabButton tab="account" href="/account">
-          <IonIcon icon={personSharp} />
-          <IonLabel>Account</IonLabel>
-        </IonTabButton>
-      </IonTabBar>
-    </IonTabs>
-  </>
+
+    <IonTabBar slot="bottom">
+      <IonTabButton tab="featured" href="/featured">
+        <IonIcon icon={starSharp} />
+        <IonLabel>Featured</IonLabel>
+      </IonTabButton>
+      <IonTabButton tab="find" href="/find">
+        <IonIcon icon={searchSharp} />
+        <IonLabel>Find Events</IonLabel>
+      </IonTabButton>
+      <IonTabButton tab="myEvents" href="/myevents">
+        <IonIcon icon={calendarSharp} />
+        <IonLabel>My Events</IonLabel>
+      </IonTabButton>
+      <IonTabButton tab="account" href="/account">
+        <IonIcon icon={personSharp} />
+        <IonLabel>Account</IonLabel>
+      </IonTabButton>
+    </IonTabBar>
+  </IonTabs>
 );
 
 const DesktopLayout: React.FC = () => {
