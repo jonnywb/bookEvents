@@ -13,6 +13,9 @@ import {
   IonToolbar,
   useIonRouter,
   IonLoading,
+  IonButtons,
+  IonMenuButton,
+  getPlatforms,
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 
@@ -70,10 +73,17 @@ const FindEvents: React.FC = () => {
     setLoading(false);
   };
 
+  const isDesktop = getPlatforms().includes("desktop");
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
+          {isDesktop && (
+            <IonButtons slot="start">
+              <IonMenuButton />
+            </IonButtons>
+          )}
           <IonTitle>Find Events</IonTitle>
           {user?.staffMember && (
             <IonButton

@@ -1,5 +1,7 @@
 import {
+  getPlatforms,
   IonButton,
+  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -11,6 +13,7 @@ import {
   IonHeader,
   IonIcon,
   IonInput,
+  IonMenuButton,
   IonModal,
   IonPage,
   IonRow,
@@ -201,10 +204,17 @@ const Account: React.FC = () => {
   };
 
   if (user) {
+    const isDesktop = getPlatforms().includes("desktop");
     return (
       <IonPage>
         <IonHeader>
           <IonToolbar>
+            {isDesktop && (
+              <IonButtons slot="start">
+                <IonMenuButton />
+              </IonButtons>
+            )}
+
             <IonTitle>Account</IonTitle>
             <IonButton
               className="ion-margin-end"

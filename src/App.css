@@ -1,0 +1,7 @@
+.active {
+  --color: var(--ion-color-primary);
+}
+
+ion-split-pane {
+  --side-width: 10vw;
+}

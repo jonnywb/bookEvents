@@ -1,4 +1,14 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonLoading } from "@ionic/react";
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonLoading,
+  IonButtons,
+  IonMenuButton,
+  getPlatforms,
+} from "@ionic/react";
 
 import { db } from "../config/FirebaseConfig";
 import { query, collection, getDocs, where } from "firebase/firestore";
@@ -47,10 +57,17 @@ const MyEvents: React.FC = () => {
     setLoading(false);
   };
 
+  const isDesktop = getPlatforms().includes("desktop");
+
   return (
     <IonPage>
       <IonHeader translucent={true}>
         <IonToolbar>
+          {isDesktop && (
+            <IonButtons slot="start">
+              <IonMenuButton />
+            </IonButtons>
+          )}
           <IonTitle>My Events</IonTitle>
         </IonToolbar>
       </IonHeader>

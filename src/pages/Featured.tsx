@@ -1,9 +1,12 @@
 import {
+  getPlatforms,
   IonButton,
+  IonButtons,
   IonContent,
   IonHeader,
   IonIcon,
   IonLoading,
+  IonMenuButton,
   IonPage,
   IonTitle,
   IonToolbar,
@@ -53,11 +56,18 @@ const Featured: React.FC = () => {
     setLoading(false);
   };
 
+  const isDesktop = getPlatforms().includes("desktop");
+
   if (user) {
     return (
       <IonPage>
         <IonHeader translucent={true}>
           <IonToolbar>
+            {isDesktop && (
+              <IonButtons slot="start">
+                <IonMenuButton />
+              </IonButtons>
+            )}
             <IonTitle>Featured Events</IonTitle>
             {user.staffMember && (
               <IonButton
