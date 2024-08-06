@@ -1,15 +1,15 @@
 import {
   IonContent,
   IonGrid,
-  IonHeader,
   IonPage,
-  IonTitle,
-  IonToolbar,
-  IonToggle,
   IonCard,
   IonCol,
   IonRow,
   IonItem,
+  IonLabel,
+  IonSegment,
+  IonSegmentButton,
+  IonIcon,
 } from "@ionic/react";
 import React, { useState } from "react";
 
@@ -17,36 +17,45 @@ import "./Home.css";
 
 import Login from "../components/Login";
 import Register from "../components/Register";
+import { personAddOutline, personOutline } from "ionicons/icons";
 
 const Home: React.FC = () => {
-  const [showRegister, setShowRegister] = useState<boolean>(false);
+  const [page, setPage] = useState<string>("login");
 
   return (
     <IonPage>
       <IonContent>
         <IonGrid fixed>
           <IonRow className="ion-justify-content-center">
-            <IonCol sizeXs="7" sizeSm="7" sizeMd="5" sizeLg="3.5" sizeXl="3">
-              <img src="/icon.png" alt="bookEvents" />
+            <IonCol sizeXs="7.5" sizeSm="7.5" sizeMd="5.5" sizeLg="4" sizeXl="3.5">
+              <img src="/logo.png" alt="bookEvents" className="ion-margin" />
             </IonCol>
           </IonRow>
           <IonRow className="ion-justify-content-center">
             <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
-              <IonCard>
-                {!showRegister && <Login />}
-
-                {showRegister && <Register />}
-              </IonCard>
               <IonItem>
-                <IonToggle
-                  justify="end"
-                  onIonChange={(e: any) => {
-                    setShowRegister(e.target.checked);
+                <IonSegment
+                  value={page}
+                  onIonChange={(e) => {
+                    const value = e.detail.value as string;
+                    setPage(value);
                   }}
                 >
-                  Create a new account
-                </IonToggle>
+                  <IonSegmentButton value="login" layout="icon-start">
+                    <IonIcon icon={personOutline} />
+                    <IonLabel>Login</IonLabel>
+                  </IonSegmentButton>
+                  <IonSegmentButton value="register" layout="icon-start">
+                    <IonIcon icon={personAddOutline} />
+                    <IonLabel>Register</IonLabel>
+                  </IonSegmentButton>
+                </IonSegment>
               </IonItem>
+              <IonCard>
+                {page === "login" && <Login />}
+
+                {page === "register" && <Register />}
+              </IonCard>
             </IonCol>
           </IonRow>
         </IonGrid>
