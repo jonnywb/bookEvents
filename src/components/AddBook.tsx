@@ -9,6 +9,7 @@ import {
   IonList,
   IonRow,
   IonText,
+  IonThumbnail,
 } from "@ionic/react";
 import { closeOutline } from "ionicons/icons";
 import React, { useState } from "react";
@@ -196,7 +197,9 @@ const AddBook: React.FC<AddBookProps> = ({ selectedBook, setSelectedBook, select
           >
             {searchResults.map((result, index) => (
               <IonItem key={index} button onClick={() => handleBookSelect(result)}>
-                <img src={result.volumeInfo.imageLinks.thumbnail} slot="start" style={{ height: "8vh" }} />
+                <IonThumbnail slot="start">
+                  <img src={result.volumeInfo.imageLinks.thumbnail} />
+                </IonThumbnail>
                 <IonLabel>
                   <h3>{result.volumeInfo.title}</h3>
                   <p>by {result.volumeInfo.authors?.join(", ")}</p>
