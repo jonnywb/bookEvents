@@ -14,6 +14,7 @@ import {
   IonText,
   IonIcon,
   IonItem,
+  IonImg,
 } from "@ionic/react";
 import React from "react";
 import { cardOutline, star, starOutline, timeOutline } from "ionicons/icons";
@@ -95,12 +96,12 @@ const EventCardList: React.FC<EventsCardListProps> = ({ events, getEvents }) => 
                     <IonRow className="ion-justify-content-center">
                       <IonCol size="5">
                         {event.category === "Author Meet and Greet" || event.category === "Writing Workshop" ? (
-                          <img
+                          <IonImg
                             src={`https://covers.openlibrary.org/a/olid/${event.bookDetails.authorKey}-M.jpg`}
                             alt={event.bookDetails.authors}
                           />
                         ) : (
-                          <img src={event.bookDetails.image} alt={event.eventName} />
+                          <IonImg src={event.bookDetails.image} alt={event.eventName} />
                         )}
                       </IonCol>
                       <IonCol>
