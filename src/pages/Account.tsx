@@ -171,10 +171,16 @@ const Account: React.FC = () => {
 
   const handleUpload = async (): Promise<string> => {
     if (image && user) {
-      const storageRef = ref(storage, `profilePictures/${user.uid}.jpg`);
-      await uploadString(storageRef, image, "data_url");
-      const downloadURL = await getDownloadURL(storageRef);
-      return downloadURL;
+      try {
+        const storageRef = ref(storage, `profilePictures/${user.uid}.jpg`);
+        await uploadString(storageRef, image, "data_url");
+        const downloadURL = await getDownloadURL(storageRef);
+        return downloadURL;
+      } catch (error) {
+        console.error("Error uploading image: ", error);
+        setErrorMessage("Error uploading image.");
+        setIsOpen(true);
+      }
     } else {
       console.log("Unable to upload image, please check you're logged in and have selected a new image.");
     }

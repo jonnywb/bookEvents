@@ -1,4 +1,7 @@
 import type { CapacitorConfig } from "@capacitor/cli";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const config: CapacitorConfig = {
   appId: "ionic.bookevents",
@@ -6,7 +9,7 @@ const config: CapacitorConfig = {
   webDir: "dist",
   plugins: {
     GoogleMaps: {
-      apiKey: "AIzaSyACGNlbIgk_6_P5UngLpNsEkoBoaQzmBkU",
+      apiKey: process.env.VITE_GOOGLE_MAPS_API_KEY,
     },
   },
 };

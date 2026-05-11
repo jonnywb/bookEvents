@@ -7,7 +7,7 @@ import { Capacitor } from "@capacitor/core";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+  apiKey: "AIzaSyACGNlbIgk_6_P5UngLpNsEkoBoaQzmBkU",
   authDomain: "bookevents-5bd5d.firebaseapp.com",
   projectId: "bookevents-5bd5d",
   storageBucket: "bookevents-5bd5d.appspot.com",
